@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.BuyerMapper">
+    <resultMap id="productResult" type="bean.Product">
+        <id column="productid" property="productId" />
+        <result column="caption" property="caption" />
+        <result column="picture" property="picture" />
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="number" property="number"/>
+        <result column="abstract_text" property="abstractText"/>
+        <result column="description" property="description"/>
+        <result column="bought_time" property="boughtTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        productid AS productId
+        ,caption AS caption
+        ,picture AS picture
+        ,bought_time AS boughtTime
+        ,price AS price
+        ,status AS statusName
+    </sql>
+
+    <select id="listAllProduct" resultMap="productResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `product`
+    </select>
+
+    <select id="selectProductById" parameterType="Integer" resultMap="productResult">
+        SELECT
+        productid AS productId,
+        caption, picture,
+        abstract_text AS abstractText,
+        price,
+        number,
+        status AS statusName,
+        description
+        FROM
+        `product` WHERE
+        productid =
+        #{productId}
+    </select>
+
+    <select id="selectProductByIdList" parameterType="java.util.ArrayList" resultMap="productResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `product`
+        <if test="productIdList != null">
+             WHERE productid IN
+            <foreach collection="productIdList" item="value" index="index" open="(" close=")"
+                     separator=",">
+                #{value}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateSingleProduct" parameterType="bean.Product">
+        UPDATE `product`
+        <set>
+            <if test="statusName != null">status = #{statusName},</if>
+            <if test="number != null">`number` = #{number},</if>
+            <if test="boughtTime != null">bought_time = #{boughtTime},</if>
+        </set>
+        WHERE productid = #{productId}
+    </update>
+
+</mapper>
+

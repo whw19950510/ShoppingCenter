@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.SellerMapper">
+    <resultMap id="productResult" type="bean.Product">
+        <id column="productid" property="productId" />
+        <result column="caption" property="caption" />
+        <result column="picture" property="picture" />
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="number" property="number"/>
+        <result column="abstract_text" property="abstractText"/>
+        <result column="description" property="description"/>
+        <result column="bought_time" property="boughtTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        productid AS productId
+        ,caption AS caption
+        ,picture AS picture
+        ,price AS price
+        ,status AS statusName
+    </sql>
+    <select id="selectProductById" parameterType="Integer" resultMap="productResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `product` WHERE productid = #{productId}
+    </select>
+    <insert id="insertNewProduct" parameterType="Product" useGeneratedKeys="true"
+            keyProperty="productId">
+      INSERT INTO `product` (caption, abstract_text, picture, price, number, description, created)
+      VALUES
+      (#{caption}, #{abstractText}, #{picture}, #{price}, #{number}, #{description}, #{created})
+    </insert>
+
+    <delete id="deleteProductById" parameterType="Integer">
+        DELETE FROM `product` WHERE productid = #{productId}
+    </delete>
+    <update id="updateExistProduct" parameterType="bean.Product">
+        UPDATE `product`
+        <set>
+            <if test="caption != null">caption = #{caption},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="abstractText != null">abstract_text = #{abstractText},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        WHERE productid = #{productId}
+    </update>
+</mapper>

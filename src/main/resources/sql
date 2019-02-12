@@ -1,0 +1,7 @@
+
+
+create table User (name char(16), password varchar(128), created timestamp);
+
+create table Product(caption varchar(128), picture varchar(2083), abstract_content varchar(256),
+description varchar(1024));
+

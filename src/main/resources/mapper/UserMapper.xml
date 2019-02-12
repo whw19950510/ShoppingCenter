@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ UserMapper.xml
+  ~ Copyright 2019 Qunhe Tech, all rights reserved.
+  ~ Qunhe PROPRIETARY/CONFIDENTIAL, any form of usage is subject to approval.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.UserMapper">
+    <resultMap id="UserResult" type="bean.User">
+        <id column="userid" property="userId" />
+        <result column="name" property="userName" />
+        <result column="password" property="password"/>
+        <result column="user_type" property="userType" />
+        <result column="shopping_cart" property="shoppingCart"/>
+        <result column="bought_price" property="boughtPrice"/>
+        <result column="owned" property="owned"/>
+    </resultMap>
+    <update id="updateSingleUser" parameterType="bean.User" keyProperty="userId">
+      UPDATE `user`
+        <set>
+            <if test="shoppingCart != null">shopping_cart = #{shoppingCart},</if>
+            <if test="boughtPrice != null">bought_price = #{boughtPrice},</if>
+            <if test="owned != null">owned = #{owned}</if>
+        </set>
+      WHERE userid = #{userId}
+    </update>
+
+    <select id="selectSingleUserByName" parameterType="String" resultMap="UserResult">
+        SELECT
+        userid AS userId,
+        name AS userName,
+        password,
+        user_type AS userTypeName,
+        shopping_cart AS shoppingCart,
+        owned AS owned,
+        bought_price AS boughtPrice
+        FROM `user` WHERE
+        name = #{name}
+    </select>
+</mapper>
